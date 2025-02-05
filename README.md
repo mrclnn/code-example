@@ -1,64 +1,84 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
 
-## About Laravel
+В репозитории представлен пример реализации "зеркала" для сущностей из amoCRM.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Существует определенный набор сущностей в CRM системе: компании, контакты, лиды
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+В базе воссоздана структура для хранения этих сущностей и взаимосвязей между ними, класс для взаимодействия с зеркалом и команда по синхронизации зеркала и сущностей в CRM
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-## Learning Laravel
+Консольная команда периодически выполняющаяся и синхронизирующая сущности в амо и зеркале:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+[MirrorEntitiesSync.php](app%2FConsole%2FCommands%2FMirrorEntitiesSync.php)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-## Laravel Sponsors
+Класс для взаимодействия с зеркалом:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+[MirrorHelper.php](app%2Flib%2FMirrorHelper%2FMirrorHelper.php)
 
-### Premium Partners
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+Миграции в директории database/migrations (все миграции 2024 года относятся к описываемому функционалу):
 
-## Contributing
+[2024_12_19_193715_create_mirror_leads_table.php](database%2Fmigrations%2F2024_12_19_193715_create_mirror_leads_table.php)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+[2024_12_19_193749_create_mirror_companies_table.php](database%2Fmigrations%2F2024_12_19_193749_create_mirror_companies_table.php)
 
-## Code of Conduct
+[2024_12_19_201013_create_mirror_contacts_table.php](database%2Fmigrations%2F2024_12_19_201013_create_mirror_contacts_table.php)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+[2024_12_19_205125_create_mirror_leads_cfs_table.php](database%2Fmigrations%2F2024_12_19_205125_create_mirror_leads_cfs_table.php)
 
-## Security Vulnerabilities
+[2024_12_19_205136_create_mirror_contacts_cfs_table.php](database%2Fmigrations%2F2024_12_19_205136_create_mirror_contacts_cfs_table.php)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+[2024_12_19_205145_create_mirror_companies_cfs_table.php](database%2Fmigrations%2F2024_12_19_205145_create_mirror_companies_cfs_table.php)
 
-## License
+[2024_12_19_211602_create_mirror_relations_leads_contacts_table.php](database%2Fmigrations%2F2024_12_19_211602_create_mirror_relations_leads_contacts_table.php)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+[2024_12_19_211620_create_mirror_relations_leads_companies_table.php](database%2Fmigrations%2F2024_12_19_211620_create_mirror_relations_leads_companies_table.php)
+
+[2024_12_19_211637_create_mirror_relations_contacts_companies_table.php](database%2Fmigrations%2F2024_12_19_211637_create_mirror_relations_contacts_companies_table.php)
+
+[2024_12_21_103310_create_mirror_leads_tags_table.php](database%2Fmigrations%2F2024_12_21_103310_create_mirror_leads_tags_table.php)
+
+[2024_12_21_103322_create_mirror_contacts_tags_table.php](database%2Fmigrations%2F2024_12_21_103322_create_mirror_contacts_tags_table.php)
+
+[2024_12_21_103333_create_mirror_companies_tags_table.php](database%2Fmigrations%2F2024_12_21_103333_create_mirror_companies_tags_table.php)
+
+[2024_12_21_103429_create_mirror_relations_leads_tags_table.php](database%2Fmigrations%2F2024_12_21_103429_create_mirror_relations_leads_tags_table.php)
+
+[2024_12_21_103440_create_mirror_relations_contacts_tags_table.php](database%2Fmigrations%2F2024_12_21_103440_create_mirror_relations_contacts_tags_table.php)
+
+[2024_12_21_103448_create_mirror_relations_companies_tags_table.php](database%2Fmigrations%2F2024_12_21_103448_create_mirror_relations_companies_tags_table.php)
+
+
+Модели в директории app:
+
+[MirrorCompanies.php](app%2FMirrorCompanies.php)
+
+[MirrorCompaniesCfs.php](app%2FMirrorCompaniesCfs.php)
+
+[MirrorCompaniesTags.php](app%2FMirrorCompaniesTags.php)
+
+[MirrorContacts.php](app%2FMirrorContacts.php)
+
+[MirrorContactsCfs.php](app%2FMirrorContactsCfs.php)
+
+[MirrorContactsTags.php](app%2FMirrorContactsTags.php)
+
+[MirrorLeads.php](app%2FMirrorLeads.php)
+
+[MirrorLeadsCfs.php](app%2FMirrorLeadsCfs.php)
+
+[MirrorLeadsTags.php](app%2FMirrorLeadsTags.php)
+
+
+Некоторые вспомогательные классы расположены в директориях:
+
+[AmoHelper](app%2Flib%2FAmoHelper)
+
+[lib](app%2Flib)
+
+
+
+
+
+
